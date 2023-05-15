@@ -20,7 +20,8 @@ namespace Domain.Mappers
                 model.TournamentName,
                 model.Description,
                 model.MaxPlayer,
-                model.TournamentState
+                model.TournamentState,
+                model.UserIdCreator
                 );
         }
         public static IEnumerable<TournamentDTO> ToTournamentDTOList(this IEnumerable<TournamentModel> models)
@@ -31,13 +32,16 @@ namespace Domain.Mappers
             }
         }
 
-        public static TournamentModel ToTournamentModel(this CreateTournamentForm createForm)
+        public static TournamentModel ToTournamentModel(this CreateTournamentForm createForm, int id)
         {
             return new TournamentModel(
                 createForm.TournamentName,   
-                null,
+                createForm.TournamentDescription,
                 createForm.MaxPlayer,
-              false
+                false,  
+                id
+
+               
                 );
         }
     }

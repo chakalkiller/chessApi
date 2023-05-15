@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text;
+using Bll.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +23,10 @@ builder.Services.AddTransient<IDbConnection, SqlConnection>((service) =>
 });
 //dal
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
+builder.Services.AddScoped<ITournamentRepository, TournamentRepository>();
 //bll
 builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<ITournamentService, TournamentService>();
 //api helper
 builder.Services.AddSingleton<JwtHelper>();
 

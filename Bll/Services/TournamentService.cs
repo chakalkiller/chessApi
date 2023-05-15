@@ -1,7 +1,7 @@
 ﻿using Bll.Interfaces;
-using BLL.Interfaces;
+
 using DAL.Interfaces;
-using DAL.Repositories;
+
 using Domain.Models;
 using Isopoh.Cryptography.Argon2;
 
@@ -16,17 +16,18 @@ namespace BLL.Services
         {
             _tournamentRepository = tournamentRepository;
         }
-        public TournamentModel? Create(TournamentModel tournament)
+        public TournamentModel? Create(TournamentModel tournament, int id)
         {
             TournamentModel tournamentSecure = new TournamentModel(
                 tournament.TournamentName,
                 tournament.Description,
                 tournament.MaxPlayer,
-                tournament.TournamentState
+                tournament.TournamentState,
+                id
 
             );
 
-            return _tournamentRepository.Create(tournamentSecure);
+            return _tournamentRepository.Create(tournamentSecure,id);
         }
 
         public bool Delete(int id)

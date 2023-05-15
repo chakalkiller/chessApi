@@ -22,20 +22,21 @@ namespace DAL.Repositories
         private TournamentModel Convert(IDataRecord record)
         {
             return new TournamentModel(
-                (int)record["TournamentModel_Id"],
-                (string)record["TournamentName"],               
-                (string)record["Descrition"],                
-                (int)record["MaxPlayer"],
-                (bool)record["TournamentState"]
+                (int)record["Tournament_Id"],
+                (string)record["Tournament_Name"],               
+                (string)record["Description"],                
+                (int)record["Max_Player"],
+                (bool)record["Tournament_State"],
+                (int)record["UserID_creator"]
             );
         }
 
         private void AddParameter(IDbCommand command, string name, object data)
         {
-            IDbDataParameter cmdEmail = command.CreateParameter();
-            cmdEmail.ParameterName = name;
-            cmdEmail.Value = data ?? DBNull.Value;
-            command.Parameters.Add(cmdEmail);
+            IDbDataParameter cmdNom = command.CreateParameter();
+            cmdNom.ParameterName = name;
+            cmdNom.Value = data ?? DBNull.Value;
+            command.Parameters.Add(cmdNom);
         }
 
         public IEnumerable<TournamentModel> GetAll()
@@ -82,11 +83,11 @@ namespace DAL.Repositories
             return player;
         }
 
-        public TournamentModel? Create(TournamentModel tournament)
+        public TournamentModel? Create(TournamentModel tournament,int id)
         {
-            string query = "INSERT INTO [Tournament] (TournamentName, Description, MaxPlayer , TournamentState)"
+            string query = "INSERT INTO [Tournament] (Tournament_Name, Description, Max_Player,UserID_creator )"
                 + " OUTPUT [inserted].*"
-                + " VALUES(@TournamentName, @Description, @MaxPlayer,  @TournamentState)";
+                + " VALUES(@TournamentName, @Description, @MaxPlayer,@UserID_creator)";
 
             IDbCommand command = _Connection.CreateCommand();
             command.CommandText = query;
@@ -94,8 +95,10 @@ namespace DAL.Repositories
 
             AddParameter(command, "TournamentName", tournament.TournamentName);
             AddParameter(command, "Description", tournament.Description);
-            AddParameter(command, "Description", tournament.Description);
-            AddParameter(command, "Description", tournament.Description);
+            AddParameter(command, "Maxplayer", tournament.MaxPlayer);
+            AddParameter(command, "UserID_creator", id);
+
+
 
             TournamentModel? tournamentCreated = null;
 

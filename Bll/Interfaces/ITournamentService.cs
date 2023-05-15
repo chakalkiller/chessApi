@@ -9,7 +9,7 @@ namespace Bll.Interfaces
 {
     public interface ITournamentService
     {
-        public TournamentModel? Create(TournamentModel tournament);
+        public TournamentModel? Create(TournamentModel tournament, int id);
         public IEnumerable<TournamentModel> GetAll();
 
         public TournamentModel? GetById(int tournamentId);

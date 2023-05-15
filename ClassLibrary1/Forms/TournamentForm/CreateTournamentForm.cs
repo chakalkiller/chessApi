@@ -20,7 +20,7 @@ namespace Domain.Forms.TournamentForm
         public int MaxPlayer { get; set; }
 
  
-
+        public string TournamentDescription { get; set; } = string.Empty;
    
 
     }

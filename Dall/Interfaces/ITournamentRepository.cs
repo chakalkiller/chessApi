@@ -16,7 +16,7 @@ namespace DAL.Interfaces
 
    
 
-        public TournamentModel? Create(TournamentModel tournament);
+        public TournamentModel? Create(TournamentModel tournament,int id);
 
         public bool Delete(int tournamentId);
 

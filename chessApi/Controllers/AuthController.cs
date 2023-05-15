@@ -7,10 +7,9 @@ using Domain.Mappers;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Bll.Interfaces;
-using Domain.DTO.Tournament;
 
-namespace APIUserDevOps.Controllers
+
+namespace chessAPI.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
@@ -36,30 +35,7 @@ namespace APIUserDevOps.Controllers
                 return (tokenId is null) ? null : int.Parse(tokenId);
             }
         }
-        [HttpGet]
-        [Produces("application/json")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<PlayerDTO>))]
-        [AllowAnonymous] // desactive authorize
-        public ActionResult<IEnumerable<PlayerDTO>> GetAll()
-        {
-            return Ok(_playerService.GetAll().ToPlayerDTOList());
-        }
 
-        [HttpGet("{id:int}")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PlayerDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<PlayerDTO> GetById([FromRoute] int id)
-        {
-            PlayerModel? model = _playerService.GetById(id);
-
-            if (model is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(model.ToPlayerDTO());
-        }
 
         [HttpPost("register")]
         [AllowAnonymous]
@@ -80,7 +56,7 @@ namespace APIUserDevOps.Controllers
 
             return Created($"/api/Auth/{player.PlayerId}", player);
         }
-
+        /*
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -119,12 +95,12 @@ namespace APIUserDevOps.Controllers
 
             return BadRequest();
         }
-
+        */
         [HttpPost("login")]
-        [AllowAnonymous]
         [Consumes("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
         public IActionResult Login([FromBody] LoginPlayerForm loginForm)
         {
             if (!ModelState.IsValid)
@@ -132,9 +108,9 @@ namespace APIUserDevOps.Controllers
                 return BadRequest();
             }
 
-            int? userId = _playerService.Login(loginForm.Email, loginForm.Password);
+            int? PlayerId = _playerService.Login(loginForm.Email, loginForm.Password);
 
-            if (userId is null)
+            if (PlayerId is null)
             {
                 return Problem(
                     detail: "Credential invalide",
