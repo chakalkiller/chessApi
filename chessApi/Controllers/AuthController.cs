@@ -35,7 +35,37 @@ namespace chessAPI.Controllers
                 return (tokenId is null) ? null : int.Parse(tokenId);
             }
         }
+        [HttpPost("login")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
+        public IActionResult Login([FromBody] LoginPlayerForm loginForm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
 
+            int? PlayerId = _playerService.Login(loginForm.Email, loginForm.Password);
+
+            if (PlayerId is null)
+            {
+                return Problem(
+                    detail: "Credential invalide",
+                    statusCode: 400
+                );
+            }
+            PlayerModel? playerModel = _playerService.GetById((int)PlayerId);
+            if (playerModel is null)
+            {
+                return Problem(statusCode: StatusCodes.Status500InternalServerError);
+            }
+            string token = _jwtHelper.CreateToken(playerModel);
+
+            // TODO Change this to use JWT ;)
+            return Ok(new JwtDTO() { Token = token });
+        }
 
         [HttpPost("register")]
         [AllowAnonymous]
@@ -96,37 +126,7 @@ namespace chessAPI.Controllers
             return BadRequest();
         }
         */
-        [HttpPost("login")]
-        [Consumes("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [AllowAnonymous]
-        public IActionResult Login([FromBody] LoginPlayerForm loginForm)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
 
-            int? PlayerId = _playerService.Login(loginForm.Email, loginForm.Password);
-
-            if (PlayerId is null)
-            {
-                return Problem(
-                    detail: "Credential invalide",
-                    statusCode: 400
-                );
-            }
-            PlayerModel? playerModel = _playerService.GetById((int)PlayerId);
-            if (playerModel is null)
-            {
-                return Problem(statusCode: StatusCodes.Status500InternalServerError);
-            }
-            string token = _jwtHelper.CreateToken(playerModel);
-
-            // TODO Change this to use JWT ;)
-            return Ok(new JwtDTO() { Token = token });
-        }
 
     }
 }

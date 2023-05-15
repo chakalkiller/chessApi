@@ -135,5 +135,23 @@ namespace DAL.Repositories
 
             return nbRow == 1;
         }
+
+        public bool OpenRegister(int TournamentId, int PlayerId)
+        {
+            
+                string query = "UPDATE [Tournament]" +
+                    " SET [Tournament_State] = 1 " +
+                    " WHERE [Tournament_Id] = @Tournament_Id AND [UserId_creator] = @UserId_creator;";
+                IDbCommand command = _Connection.CreateCommand();
+                command.CommandText = query;
+                command.CommandType = CommandType.Text;
+                AddParameter(command, "Tournament_Id", TournamentId);
+                AddParameter(command, "UserId_creator", PlayerId);
+                _Connection.Open();
+                int nbRow = command.ExecuteNonQuery();
+                _Connection.Close();
+                return nbRow == 1;
+            
+        }
     }
 }

@@ -44,6 +44,10 @@ namespace BLL.Services
         {
             return _tournamentRepository.GetById(id);
         }
-    
+
+        public bool OpenRegister(int TournamentId, int PlayerId)
+        {
+            return _tournamentRepository.OpenRegister(TournamentId, PlayerId);
+        }
     }
 }

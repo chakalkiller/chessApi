@@ -16,9 +16,10 @@ namespace Bll.Interfaces
         
 
         public bool Delete(int tournamentId);
+        public bool OpenRegister(int TournamentId, int PlayerId);
 
 
-      
+
 
     }
 }

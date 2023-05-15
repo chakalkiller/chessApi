@@ -78,6 +78,38 @@ namespace chessApi.Controllers
 
             return Ok(model.ToTournamentDTO());
         }
+        [HttpPatch("{TournamentId:int}/open")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult OpenRegister([FromRoute] int TournamentId, [FromBody] TournamentStatusForm tournamentStatus)
+        {
+            TournamentModel? tournament = _tournamentService.GetById(TournamentId);
+            if (!ModelState.IsValid || tournament is null )
+                return BadRequest();
+            if (tournamentStatus.ChangeStatus != true)
+                return new ForbidResult();
+            if (_tournamentService.OpenRegister(TournamentId, (int)PlayerId))
+                return NoContent();
+            return BadRequest();
+        }
+        /*
+        [HttpPatch("{id:int}/cancel")]
+        [Consumes("application/json")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult CancelTournament([FromRoute] int playerId, [FromBody] CreateTournamentForm tournamentStatus)
+        {
+            TournamentModel? tournament = _tournamentService.GetById(playerId);
+            if (!ModelState.IsValid || tournament is null || (tournament.TournamentState != "Announced" && tournament.TournamentState != "Registering"))
+                return BadRequest();
+            if (tournamentStatus.Changer_Le_Statut_Oui_Ou_Non.ToLower() != "oui")
+                return new ForbidResult();
+            if (_tournamentService.CancelTournament(playerId, (int)PlayerId))
+                return NoContent();
+            return BadRequest();
+        }
+        */
 
     }
 }
